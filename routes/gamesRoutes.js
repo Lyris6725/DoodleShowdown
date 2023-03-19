@@ -75,20 +75,21 @@ router.patch('/:id/join', auth.verifyAuth, async function (req, res, next) {
 });
 
 
-router.patch('/auth/cancel', auth.verifyAuth, async function (req, res, next) {
+router.patch('/auth/close', auth.verifyAuth, async function (req, res, next) {
     try {
-        console.log("Cancel game");
+        console.log("Player closed the game.");
         if (!req.game) {
-            res.status(400).send({msg:"You are not at a game, nothing to cancel"});
+            res.status(400).send({msg:"You are not at a game, please create or join a game"});
+        } else if (req.game.state.name != "Finished") {
+            res.status(400).send({msg: "The game has not finished."});
         } else {
-            let result = await Game.cancel(req.game.id);
-            res.status(result.status).send(result.result);
+            await Game.closeGame(req.game);
+            res.status(200).send({msg: "Game closed successfully."});
         }
     } catch (err) {
         console.log(err);
         res.status(500).send(err);
     }
 });
-
 
 module.exports = router;

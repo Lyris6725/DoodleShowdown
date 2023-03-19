@@ -39,20 +39,17 @@ router.get('/', async function (req, res, next) {
 
 
 
-
+/*
 router.patch('/auth/close', auth.verifyAuth, async function (req, res, next) {
     try {
-        console.log("Player closed the score view for the current game.");
+        console.log("Player closed the game.");
         if (!req.game) {
             res.status(400).send({msg:"You are not at a game, please create or join a game"});
         } else if (req.game.state.name != "Finished") {
-            // Do not need to check if the player is in the display score phase
-            // there would be no req.game if he is not 
-            res.status(400).send({msg: 
-                "The game has not finished."});
-        }else {
-            let result = await ScoreBoardLine.closeScorePlayer(req.game);
-            res.status(result.status).send(result.result);
+            res.status(400).send({msg: "The game has not finished."});
+        } else {
+            await Game.closeGame(req.game);
+            res.status(200).send({msg: "Game closed successfully."});
         }
     } catch (err) {
         console.log(err);
@@ -60,5 +57,6 @@ router.patch('/auth/close', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+*/
 
 module.exports = router;

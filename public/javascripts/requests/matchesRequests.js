@@ -84,7 +84,7 @@ async function requestCancelMatch() {
     }
 }
 
-
+/*
 async function requestScores() {
     try {
         const response = await fetch(`/api/scores/`);
@@ -112,4 +112,4 @@ async function requestScore() {
         return {err: err};
     }
 }
-
+*/

@@ -32,6 +32,13 @@ async function setup() {
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game')
 
+    GameInfo.endgameButton = createButton('Close Match')
+    GameInfo.endgameButton.parent('game')
+    GameInfo.endgameButton.position(GameInfo.width-150,GameInfo.height-100);
+    GameInfo.endgameButton.mousePressed(endgameAction);
+    GameInfo.endgameButton.addClass('game')
+
+
 
     GameInfo.prepareUI();
     
@@ -46,11 +53,11 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
+    } /*else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
         GameInfo.scoreWindow.draw();
     } else  {
         GameInfo.scoreBoard.draw();
-    }
+    }*/
 }
 
 async function mouseClicked() {
