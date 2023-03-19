@@ -1,2 +1,0 @@
-How to what databases are currently in MYSQL
-SHOW DATABASES;
