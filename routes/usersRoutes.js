@@ -23,6 +23,7 @@ router.get('/auth',auth.verifyAuth,  async function (req, res, next) {
     }
 });
 
+//Register a new player
 router.post('', async function (req, res, next) {
     try {
         console.log("Register player ");
@@ -37,6 +38,7 @@ router.post('', async function (req, res, next) {
     }
 });
 
+//Log out the player
 router.delete('/auth', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Logout player ");
@@ -51,6 +53,7 @@ router.delete('/auth', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+//Login the player
 router.post('/auth', async function (req, res, next) {
     try {
         console.log("Login player ");

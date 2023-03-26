@@ -48,11 +48,12 @@ class Game {
         try {
             let [dbPlayers] = await pool.query(`Select * from user 
             inner join user_game on ug_user_id = usr_id
-             inner join user_game_state on ugst_id = ug_state_id
+            inner join user_game_state on ugst_id = ug_state_id
             where ug_game_id=?`, [game.id]);
             for (let dbPlayer of dbPlayers) {
                 let player = new Player(dbPlayer.ug_id,dbPlayer.usr_name,
-                            new State(dbPlayer.ugst_id,dbPlayer.ugst_state),dbPlayer.ug_order);
+                            new State(dbPlayer.ugst_id,dbPlayer.ugst_state),dbPlayer.ug_order,
+                            dbPlayer.ug_energy, dbPlayer.ug_energy_production);
                 if (dbPlayer.usr_id == userId) game.player = player;
                 else game.opponents.push(player);
             }
@@ -88,8 +89,6 @@ class Game {
                 return result;
             }
             game = result.result;
-            game.player.energy = dbGame.ug_energy; // add energy field from db
-            game.player.energy_production = dbGame.ug_energy_production; // add energy_production field from db
             return { status: 200, result: game };
             } catch (err) {
             console.log(err);
@@ -132,7 +131,7 @@ class Game {
             let [result] = await pool.query(`Insert into game (gm_state_id) values (?)`, [1]);
             let gameId = result.insertId;
             // add the user to the game
-            await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_order) values (?,?,?)`, [userId, gameId, 1]);
+            await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`, [userId, gameId, 1]);
 
             return {status:200, result: {msg: "You created a new game."}};
         } catch (err) {
@@ -141,6 +140,28 @@ class Game {
         }
     }
 
+    /*
+    static async updateRoundModel(game) {
+        try {
+          await pool.query(`UPDATE game SET gm_round = gm_round+1 WHERE gm_id = ?`, [game.id]);
+          return { status: 200, result: { msg: "Game round updated." } };
+        } catch (err) {
+          console.log(err);
+          return { status: 500, result: err };
+        }
+    }
+    */
+    
+
+  /*
+  async getCurrentRound() { //tries to get the current round 
+        const query = 'SELECT gm_round FROM game WHERE gm_id = ?'; //makes the query to select the round from game where the game id is equals to the game the player is on
+        const result = await pool.query(query, this.id); //the result is what we return from the query and the id of the match
+        return result[0].gm_round; //this returns the value of the round
+        
+      }
+  */
+      
 
     // No verification needed since we considered that it was already made 
     // This should have a verification from every player

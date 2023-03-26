@@ -5,7 +5,7 @@ const Play = require ("../models/playsModel");
 const auth = require("../middleware/auth");
 
 
-
+//Open matches
 router.get('/', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Get games that are waiting for players");
@@ -40,6 +40,7 @@ router.get('/auth', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
+//Create a new game
 router.post('/', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Create a new game");
@@ -55,7 +56,7 @@ router.post('/', auth.verifyAuth, async function (req, res, next) {
     }
 });
 
-
+//Join a game
 router.patch('/:id/join', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Join game");
@@ -73,8 +74,8 @@ router.patch('/:id/join', auth.verifyAuth, async function (req, res, next) {
         res.status(500).send(err);
     }
 });
-
-
+  
+//End a game
 router.patch('/auth/close', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Player closed the game.");

@@ -1,6 +1,6 @@
 
 async function getGameInfo() {
-    let result = await requestPlayerGame();
+    let result = await requestPlayerGame(); //matchesRequests
     if (!result.successful) {
         alert("Something is wrong with the game please login again!");
         window.location.pathname = "index.html";
@@ -20,18 +20,26 @@ async function getGameInfo() {
 
 
 async function endturnAction() {
-    let result = await requestEndTurn();
+    let result = await requestEndTurn(); //gameRequests
     if (result.successful) {
-        await  getGameInfo();
+        await  getGameInfo(); //actions
         GameInfo.prepareUI();
     } else alert("Something went wrong when ending the turn.")
 }
 
 async function endgameAction() {
-    let result = await requestEndGame();
+    let result = await requestEndGame(); //gameRequests
     if (result.successful) {
-        await checkGame(true); // This should send the player back to matches
-    } else alert("Something went wrong when ending the turn.")
+        await checkGame(true); // This should send the player back to matches //verifications
+    } else alert("Something went wrong when ending the game.")
+}
+
+async function updateroundAction() {
+    let result = await updateCurrentRound(); //gameRequests
+    if (result.successful) {
+        await  getGameInfo(); //actions
+        GameInfo.prepareUI();
+    } else alert("Something went wrong when updating the round.")
 }
 
 /*
