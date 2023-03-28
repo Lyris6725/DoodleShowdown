@@ -1,0 +1,17 @@
+use the following command to see all databases you have currently 
+
+SHOW DATABASES;
+
+to delete the database in case a problem occurs use this
+
+DROP DATABASE doodleshowdown;
+
+to see all the tables use
+
+USE doodleshowdown;
+SHOW TABLES;
+
+and to see all information inside those tables use
+
+USE doodleshowdown;
+SELECT * FROM table_name;

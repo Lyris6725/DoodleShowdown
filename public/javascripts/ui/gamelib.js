@@ -2,7 +2,7 @@
 async function refresh() {
     if (GameInfo.game.player.state == "Waiting") { 
         // Every time we are waiting
-        await  getGameInfo();  //actions      
+        await  getGameInfo();       
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
@@ -22,7 +22,7 @@ async function setup() {
     canvas.parent('game');
     // preload  images
     
-    await  getGameInfo(); //actions
+    await  getGameInfo();
     setInterval(refresh,1000);
 
     //buttons (create a separated function if they are many)
@@ -32,11 +32,6 @@ async function setup() {
     GameInfo.endturnButton.mousePressed(endturnAction);
     GameInfo.endturnButton.addClass('game')
 
-    GameInfo.endgameButton = createButton('Close Match')
-    GameInfo.endgameButton.parent('game')
-    GameInfo.endgameButton.position(GameInfo.width-150,GameInfo.height-100);
-    GameInfo.endgameButton.mousePressed(endgameAction);
-    GameInfo.endgameButton.addClass('game')
 
     GameInfo.prepareUI();
     
@@ -51,16 +46,11 @@ function draw() {
         textSize(40);
         fill('black');
         text('Loading...', GameInfo.width/2, GameInfo.height/2);
-    } 
-
-    else
-    {
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text("Round " + GameInfo.game.round, GameInfo.width/12, GameInfo.height/1.1);
-    text("You vs: " + GameInfo.game.opponents[0].name, GameInfo.width/2, GameInfo.height/8);
+    } else if (GameInfo.game.state == "Finished" && GameInfo.scoreWindow) {
+        GameInfo.scoreWindow.draw();
+    } else  {
+        GameInfo.scoreBoard.draw();
     }
-
 }
 
 async function mouseClicked() {

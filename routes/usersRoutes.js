@@ -22,8 +22,7 @@ router.get('/auth',auth.verifyAuth,  async function (req, res, next) {
         res.status(500).send(err);
     }
 });
-
-//Register a new player
+// Register
 router.post('', async function (req, res, next) {
     try {
         console.log("Register player ");
@@ -37,8 +36,7 @@ router.post('', async function (req, res, next) {
         res.status(500).send(err);
     }
 });
-
-//Log out the player
+// Logout
 router.delete('/auth', auth.verifyAuth, async function (req, res, next) {
     try {
         console.log("Logout player ");
@@ -52,8 +50,7 @@ router.delete('/auth', auth.verifyAuth, async function (req, res, next) {
         res.status(500).send(err);
     }
 });
-
-//Login the player
+// Login
 router.post('/auth', async function (req, res, next) {
     try {
         console.log("Login player ");

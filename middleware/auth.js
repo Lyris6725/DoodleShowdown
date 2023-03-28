@@ -3,6 +3,7 @@ const Game = require("../models/gamesModel");
 // The correct value depends maxAge of the cookie (see index.js)
 const refreshPer =  1440e3; // 1440e3 milliseconds = 1 hour
 
+// Verifies if the user is authenticated and fills req.game with game info
 module.exports.verifyAuth = async function (req, res, next) {
     try {
         let token = req.session.token;

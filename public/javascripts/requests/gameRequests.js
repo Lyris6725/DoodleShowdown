@@ -1,22 +1,4 @@
 // Actions
-
-/*
-async function updateCurrentRound(game, round) {
-    try {
-        const response = await fetch(`/api/games/auth/current-round`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return { successful: response.status == 200 };
-    } catch (err) {
-        console.log(err);
-        return { err: err };
-    }
-}
-*/
-
 async function requestEndTurn() {
     try {
         const response = await fetch(`/api/plays/endturn`, 
@@ -35,26 +17,6 @@ async function requestEndTurn() {
     }
 }
 
-//async function requestCloseScore() {
-async function requestEndGame() {
-    try {
-        const response = await fetch(`/api/games/auth/close`, //this fetch might be incorrect 
-        {
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-          method: "PATCH"
-      });
-      return {successful: response.status == 200};
-    } catch (err) {
-        // Treat 500 errors here
-        console.log(err);
-        return {err: err};
-    }
-}
-
-/*
 async function requestCloseScore() {
     try {
         const response = await fetch(`/api/scores/auth/close`, 
@@ -72,25 +34,4 @@ async function requestCloseScore() {
         return {err: err};
     }
 }
-*/
 
-/*
-async function updateCurrentRound(game, round) {
-    try {
-        const response = await fetch(`/api/games/auth/current-round`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                gameId: game.id,
-                round
-            })
-        });
-        return { successful: response.status == 200 };
-    } catch (err) {
-        console.log(err);
-        return { err: err };
-    }
-}
-*/
