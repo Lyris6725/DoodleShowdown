@@ -26,7 +26,7 @@ async function setup() {
     setInterval(refresh,1000);
 
     //buttons (create a separated function if they are many)
-    GameInfo.endturnButton = createButton('End Turn');
+    GameInfo.endturnButton = createButton('End Turn'); //button is set in game info
     GameInfo.endturnButton.parent('game');
     GameInfo.endturnButton.position(GameInfo.width-150,GameInfo.height-50);
     GameInfo.endturnButton.mousePressed(endturnAction);

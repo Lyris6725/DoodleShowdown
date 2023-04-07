@@ -21,11 +21,13 @@ const usersRouter = require("./routes/usersRoutes");
 const gamesRouter = require("./routes/gamesRoutes");
 const playsRouter = require("./routes/playsRoutes");
 const scoresRouter = require("./routes/scoresRoutes");
+const cardsRouter = require("./routes/cardsRoutes");
 
 app.use("/api/users",usersRouter);
 app.use("/api/games",gamesRouter);
 app.use("/api/plays",playsRouter);
 app.use("/api/scores",scoresRouter);
+app.use("/api/cards",cardsRouter);
 
 // when we don't find anything
 app.use((req, res, next) => {
