@@ -12,7 +12,7 @@ a {
   font-size: larger;
 }
 
-#matches, #scores {
+#matches {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;

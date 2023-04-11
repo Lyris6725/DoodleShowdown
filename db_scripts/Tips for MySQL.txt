@@ -15,3 +15,9 @@ and to see all information inside those tables use
 
 USE doodleshowdown;
 SELECT * FROM table_name;
+
+//You need this to add the card types
+INSERT INTO card_type
+(ct_id, ct_name) VALUES (3,'Water')
+
+//You need this to add cards 

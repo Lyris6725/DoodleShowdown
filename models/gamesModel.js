@@ -3,8 +3,8 @@ const State = require("./statesModel");
 
 // For now it is only an auxiliary class to hold data in here 
 // so no need to create a model file for it
-class Player { //template
-    constructor(id,name,state,order) { //user_game
+class Player {
+    constructor(id,name,state,order) {
         this.id = id;        
         this.name = name;
         this.state= state;
@@ -19,24 +19,8 @@ class Player { //template
     }
 }
 
-class Card{ //template
-    constructor(id, name, type, value, player) { //game_Card (you can add multiple tables not just one)
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.value = value;
-        this.player = player;
-    }
-    export(){
-        let card = new Card();
-        card.name = this.name;
-        card.type = this.type;
-        card.value = this.value;
-        card.player = this.player;
-    }
-}
 class Game {
-    constructor(id,turn,state,player,opponents) { //(game + user_game)
+    constructor(id,turn,state,player,opponents) {
         this.id = id;
         this.turn = turn;
         this.state = state;
@@ -53,8 +37,6 @@ class Game {
         game.opponents = this.opponents.map(o => o.export());
         return game;
     }    
-
-
 
     // No verifications, we assume they were already made
     // This is mostly an auxiliary method
@@ -182,9 +164,6 @@ class Game {
             if (dbGame.gm_state_id != 1) 
                 return {status:400, result:{msg:"Game not waiting for other players"}};
             
-            // Randomly determine who starts    
-            let myTurn = (Math.random() < 0.5);
-
             // We join the game but the game still has not started, that will be done outside
             let [result] = await pool.query(`Insert into user_game (ug_user_id,ug_game_id,ug_state_id) values (?,?,?)`,
                         [userId, gameId, 1]);

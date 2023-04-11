@@ -19,5 +19,7 @@ insert into scoreboard_state (sbs_state) values ('Tied');
 insert into scoreboard_state (sbs_state) values ('Lost');
 insert into scoreboard_state (sbs_state) values ('Won');
 
-
-
+#Card Types
+insert into card_type (ct_id, ct_name) values (1, 'Grass');
+insert into card_type (ct_id, ct_name) values (2, 'Fire');
+insert into card_type (ct_id, ct_name) values (3, 'Water');
