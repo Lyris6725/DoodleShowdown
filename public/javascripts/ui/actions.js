@@ -31,14 +31,16 @@ async function getDecksInfo() {
 
 
 async function playCard(card) {
-    if (!card.active) {
+    let game = GameInfo.game;
+    if (game.player.state == "Playing"){
+    if (card.played) {
         alert("That card was already played");
-    } else if (confirm(`Do you want to play the "${card.name}" card?`)) {
-        let result = await requestPlayCard(card.deckId);
+    } else if ((confirm(`Do you want to play this card?`))) {
+        let result = await requestPlayCard(card.deckId, card.played);
         if (result.successful) {
             await getGameInfo();
             await getDecksInfo();
-            await getShipsInfo();
+            await endturnAction();
         }
         alert(result.msg);
         // if game ended we get the scores and prepare the ScoreWindow
@@ -47,6 +49,11 @@ async function playCard(card) {
             GameInfo.scoreWindow = new ScoreWindow(50,50,GameInfo.width-100,GameInfo.height-100,result.score,closeScore);
         }
     }
+   }
+   else
+   {
+    alert("not your turn");
+   }
 }
 
 

@@ -1,6 +1,7 @@
 const pool = require("../config/database");
 
 const MatchDecks = require("./decksModel");
+const ScoreBoardLine = require("./scoreboardModel");
 const Settings = require("./gameSettings");
 
  // auxiliary function to check if the game ended 
@@ -58,8 +59,9 @@ class Play {
                 [2, game.opponents[0].id]);
             
             // removes the cards of the player that ended and get new cards to the one that will start
-            await MatchDecks.resetPlayerDeck(game.player.id);
+            await MatchDecks.removePlayedCard(game.player.id);
             await MatchDecks.genPlayerDeck(game.opponents[0].id);
+            await ScoreBoardLine.getScoreBoardLine(game,playerIds);
             
             // Both players played
             if (game.player.order == 2) {
@@ -67,6 +69,8 @@ class Play {
                 if (await checkEndGame(game)) {
                     return await Play.endGame(game);
                 } else {
+                    //Add the who won logic here
+
                     // Increase the number of turns and continue 
                     await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
                         [game.id]);

@@ -8,7 +8,7 @@ class Card {
         this.img = img;
     }
     draw() {
-        if (!this.card.active) tint(250,100,100);
+        //if (this.card.played) tint(250,100,100);
         image(this.img, this.x,this.y, Card.width, Card.height);
         
         textAlign(CENTER,CENTER);

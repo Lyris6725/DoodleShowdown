@@ -24,7 +24,7 @@ router.patch('/play', auth.verifyAuth, async function (req, res, next) {
         if (!req.game || req.game.opponents.length == 0) {
             res.status(400).send({msg:"Your are not in a game or are still waiting for another player."});
         } 
-        let result = await MatchDecks.playDeckCard(req.game,req.body.deckId);
+        let result = await MatchDecks.playDeckCard(req.game,req.body.deckId, req.body.played);
         res.status(result.status).send(result.result);
     } catch (err) {
         console.log(err);

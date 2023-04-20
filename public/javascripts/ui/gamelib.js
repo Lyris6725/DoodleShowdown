@@ -24,7 +24,7 @@ async function setup() {
     // preload  images
     
     await  getGameInfo();
-    setInterval(refresh,1000);
+    setInterval(refresh,2000);
 
     //buttons (create a separated function if they are many)
     GameInfo.endturnButton = createButton('End Turn');
