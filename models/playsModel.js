@@ -14,7 +14,7 @@ class Play {
 
    
     // Just a to have a way to determine end of game
-    static maxNumberTurns = 10;
+    static maxNumberTurns = 3; //Maximum number of turns allowed in a game (we'll probably change this over the cap as a fail safe for too many draws)
 
     // we consider all verifications were made
     static async startGame(game) {
@@ -59,9 +59,9 @@ class Play {
                 [2, game.opponents[0].id]);
             
             // removes the cards of the player that ended and get new cards to the one that will start
-            await MatchDecks.removePlayedCard(game.player.id);
-            await MatchDecks.genPlayerDeck(game.opponents[0].id);
-            await ScoreBoardLine.getScoreBoardLine(game,playerIds);
+            
+            //await MatchDecks.genPlayerDeck(game.opponents[0].id);
+            //await ScoreBoardLine.getScoreBoardLine(game, playerIds);
             
             // Both players played
             if (game.player.order == 2) {
@@ -69,20 +69,66 @@ class Play {
                 if (await checkEndGame(game)) {
                     return await Play.endGame(game);
                 } else {
-                    //Add the who won logic here
-
-                    // Increase the number of turns and continue 
-                    await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
-                        [game.id]);
+                    let [activePlyCards] = await pool.query(`Select * from card 
+            inner join card_type on crd_type_id = ct_id
+            inner join user_game_card on ugc_crd_id = crd_id
+            where ugc_user_game_id = ? and ugc_played=1`, 
+                [game.player.id]);
+                let [activeOppCards] = await pool.query(`Select * from card 
+            inner join card_type on crd_type_id = ct_id
+            inner join user_game_card on ugc_crd_id = crd_id
+            where ugc_user_game_id = ? and ugc_played=1`, 
+                [game.opponents[0].id])
+                    
+                        // Check if both cards have the same type
+                        if (activePlyCards[0].crd_type_id === activeOppCards[0].crd_type_id) {
+                            // Check if both cards have the same value
+                            if (activePlyCards[0].crd_value === activeOppCards[0].crd_value) {
+                                console.log("Draw!");
+                            } else if (activePlyCards[0].crd_value > activeOppCards[0].crd_value) {
+                                console.log(`${game.player.name} wins!`);
+                                //await ScoreBoardLine.addScore(game, game.player.id, 1);
+                            } else {
+                                console.log(`${game.opponents[0].name} wins!`);
+                                //await ScoreBoardLine.addScore(game, game.opponents[0].id, 1);
+                            }
+                        } else {
+                            // Check which type beats the other
+                            if (
+                                (activePlyCards[0].crd_type_id === 1 && activeOppCards[0].crd_type_id === 3) ||
+                                (activePlyCards[0].crd_type_id === 2 && activeOppCards[0].crd_type_id === 1) ||
+                                (activePlyCards[0].crd_type_id === 3 && activeOppCards[0].crd_type_id === 2)
+                            ) {
+                                console.log(`${game.player.name} wins!`);
+                                //await ScoreBoardLine.addScore(game, game.player.id, 1);
+                            } else {
+                                console.log(`${game.opponents[0].name} wins!`);
+                                //await ScoreBoardLine.addScore(game, game.opponents[0].id, 1);
+                            }
+                        }
+                        
+                        // Mark both cards as played
+                        //await pool.query(`Update card set played=1 where card_id in (?, ?)`,
+                         //   [playerCard.id, opponentCard.id]);
                 }
+                
+                await MatchDecks.removePlayedCard(game.player.id);
+                // Increase the number of turns and continue 
+                await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
+                    [game.id]);
             }
-
+    
             return { status: 200, result: { msg: "Your turn ended." } };
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
         }
     }
+    
+
+    /*
+
+    */
 
     // Makes all the calculation needed to end and score the game
     static async endGame(game) {

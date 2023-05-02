@@ -49,10 +49,10 @@ class ScoreBoardLine {
         return new ScoreBoardLine(this.gameId,this.playerScores.map(p=>p.export()));
     }
 
-    static async getScoreBoardLine(gameId,playerIds) {
+    static async getScoreBoardLine(gameId,playerId) {
         try {
             let pScores = [];
-            for (let pId of playerIds) {
+            for (let pId of playerId) {
                 let result = await PlayerScore.getPlayerScore(pId);
                 if (result.status!=200) return result;
                 pScores.push(result.result);

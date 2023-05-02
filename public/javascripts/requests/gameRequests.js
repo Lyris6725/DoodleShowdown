@@ -41,8 +41,7 @@ async function requestPlayCard(deckId, played) {
             },
             method: "PATCH",
             body: JSON.stringify({
-              deckId: deckId,
-              played : 1
+              deckId: deckId
           })
         });
         let result = await response.json();

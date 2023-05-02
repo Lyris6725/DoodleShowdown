@@ -27,7 +27,7 @@ class GameInfo  {
         if (GameInfo.game.player.state == "Playing") { 
             GameInfo.endturnButton.show();
         } else if (GameInfo.game.player.state == "Waiting") {
-            GameInfo.endturnButton.hide();
+            GameInfo.endturnButton.show();
         }  else if (GameInfo.game.player.state == "Score") {
             GameInfo.endturnButton.hide();
             GameInfo.scoreWindow.open();

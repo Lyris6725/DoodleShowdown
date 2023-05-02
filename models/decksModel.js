@@ -5,7 +5,7 @@ function fromDBCardToCard(dbCard) {
     return new Card(dbCard.crd_id ,dbCard.ugc_id,dbCard.crd_value,
         //dbCard.crd_name, dbCard.crd_effect, dbCard.crd_note,
         new CardType(dbCard.ct_id,dbCard.ct_name),
-        dbCard.ugc_hidden, dbCard.ugc_played);
+        dbCard.ugc_played);
 }
 
 class CardType {
@@ -30,14 +30,29 @@ class Card {
             let [cards] = await pool.query(`select * from card inner join card_type on crd_type_id = ct_id`);
             let rndCard = cards[Math.floor(Math.random()*cards.length)];
             // insert the card
-            let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id,ugc_hidden)
-                  values (?,?,?)`, [playerId,rndCard.crd_id,false]);
+            let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id)
+                  values (?,?)`, [playerId,rndCard.crd_id]);
             return {status:200, result: {msg: "Generated the card"}};
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };
         }
     }
+    /*
+    static async genCard(playerId) {
+        try {
+            let [cards] = await pool.query(`select * from card inner join card_type on crd_type_id = ct_id`);
+            let rndCard = cards[Math.floor(Math.random()*cards.length)];
+            // insert the card
+            let [result] = await pool.query(`Insert into user_game_card (ugc_user_game_id,ugc_crd_id)
+                  values (?,?,?)`, [playerId,rndCard.crd_id]);
+            return {status:200, result: {msg: "Generated the card"}};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+    */
 }
 
 
@@ -109,14 +124,13 @@ class MatchDecks {
         }
     }
 
-
     static async playDeckCard(game,deckId,played) {
         try {
             // get the card and check if the card is from the player and it is active
             let [dbDeckCards] = await pool.query(`Select * from card 
             inner join card_type on crd_type_id = ct_id
             inner join user_game_card on ugc_crd_id = crd_id
-            where ugc_user_game_id = ? and ugc_id = ? and ugc_hidden=0 and ugc_played=0`, 
+            where ugc_user_game_id = ? and ugc_id = ? and ugc_played=0`, 
                 [game.player.id, deckId, played]);
             if (dbDeckCards.length == 0) {
                 return {status:404, result:{msg:"Card not found for this player or not active"}};
@@ -129,6 +143,32 @@ class MatchDecks {
             return { status: 500, result: err };
         }
     }
+      
+      
+    
+      
+
+    /*
+    static async playDeckCard(game,deckId,played) {
+        try {
+            // get the card and check if the card is from the player and it is active
+            let [dbDeckCards] = await pool.query(`Select * from card 
+            inner join card_type on crd_type_id = ct_id
+            inner join user_game_card on ugc_crd_id = crd_id
+            where ugc_user_game_id = ? and ugc_id = ? and ugc_played=0`, 
+                [game.player.id, deckId, played]);
+            if (dbDeckCards.length == 0) {
+                return {status:404, result:{msg:"Card not found for this player or not active"}};
+            }  
+            let card =  fromDBCardToCard(dbDeckCards[0]);
+            await pool.query(`UPDATE user_game_card SET ugc_played = ? WHERE ugc_id = ?`, [1, dbDeckCards[0].ugc_id]);
+            return {status:200, result: {msg: "Card played!"}};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+    */
     
 }
 
