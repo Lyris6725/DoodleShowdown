@@ -75,4 +75,14 @@ async function requestCloseScore() {
     }
 }
         
-
+async function requestTurnResult() {
+    try {
+      const response = await fetch(`/api/plays/turnResult`);
+      const result = await response.json();
+      return { successful: response.status === 200, msg: result.msg};
+    } catch (err) {
+      console.log(err);
+      return { err: err };
+    }
+  }
+  

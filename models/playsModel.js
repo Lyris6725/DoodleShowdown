@@ -14,7 +14,7 @@ class Play {
 
    
     // Just a to have a way to determine end of game
-    static maxNumberTurns = 3; //Maximum number of turns allowed in a game (we'll probably change this over the cap as a fail safe for too many draws)
+    static maxNumberTurns = 5; //Maximum number of turns allowed in a game (we'll probably change this over the cap as a fail safe for too many draws)
 
     // we consider all verifications were made
     static async startGame(game) {
@@ -109,13 +109,16 @@ class Play {
                                 //await ScoreBoardLine.addScore(game, game.opponents[0].id, 1);
                             }
                         }
-                        
+                        await pool.query(`update turnResult set tr_result = ? where tr_game_id = ?`, 
+                            [resultString, game.id]);
+
                         // Mark both cards as played
                         //await pool.query(`Update card set played=1 where card_id in (?, ?)`,
                          //   [playerCard.id, opponentCard.id]);
                 }
                 
                 await MatchDecks.removePlayedCard(game.player.id);
+                await MatchDecks.removePlayedCard(game.opponents[0].id);
                 // Increase the number of turns and continue 
                 await pool.query(`Update game set gm_turn=gm_turn+1 where gm_id = ?`,
                     [game.id]);
@@ -128,6 +131,22 @@ class Play {
         }
     }
     
+    static async getResultString(gameId) {
+        try {
+            const [result] = await pool.query(`
+                SELECT * FROM turnResult 
+                INNER JOIN game ON tr_game_id = gm_id
+                WHERE tr_game_id = ?`   
+                , [gameId]);
+    
+            return { status: 200, result: {msg: result[0].tr_result}};
+        } catch (err) {
+            console.log(err);
+            return { status: 500, result: err };
+        }
+    }
+    
+
 
     /*
 

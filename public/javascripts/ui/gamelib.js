@@ -7,6 +7,8 @@ async function refresh() {
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
+            let res = await requestTurnResult(GameInfo.game.id);
+            GameInfo.resultString = res.msg;
             //console.log('Result string:', GameInfo.resultString);
         }
     } 
@@ -16,7 +18,7 @@ async function refresh() {
 
 function preload() {
     GameInfo.images.card = loadImage('/assets/card_template.png');
-    GameInfo.resultString = ("Result will be displayed here.");
+    //GameInfo.resultString = ("Result will be displayed here.");
 }
 
 
