@@ -9,7 +9,8 @@ async function requestEndTurn() {
             },
           method: "PATCH"
       });
-      return {successful: response.status == 200};
+      let result = await response.json();
+      return {successful: response.status == 200, msg: result.msg}; //use this
     } catch (err) {
         // Treat 500 errors here
         console.log(err);
@@ -45,7 +46,7 @@ async function requestPlayCard(deckId, played) {
           })
         });
         let result = await response.json();
-        return {successful: response.status == 200, msg: result.msg};
+        return {successful: response.status == 200, msg: result.msg}; //use this
       } catch (err) {
           // Treat 500 errors here
           console.log(err);

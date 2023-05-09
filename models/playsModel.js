@@ -64,6 +64,9 @@ class Play {
             //await ScoreBoardLine.getScoreBoardLine(game, playerIds);
             
             // Both players played
+
+            let resultString="Your turn ended.";
+                      
             if (game.player.order == 2) {
                 // Criteria to check if game ended
                 if (await checkEndGame(game)) {
@@ -73,7 +76,9 @@ class Play {
             inner join card_type on crd_type_id = ct_id
             inner join user_game_card on ugc_crd_id = crd_id
             where ugc_user_game_id = ? and ugc_played=1`, 
-                [game.player.id]);
+                [game.player.id,]);
+
+
                 let [activeOppCards] = await pool.query(`Select * from card 
             inner join card_type on crd_type_id = ct_id
             inner join user_game_card on ugc_crd_id = crd_id
@@ -81,28 +86,26 @@ class Play {
                 [game.opponents[0].id])
                     
                         // Check if both cards have the same type
-                        if (activePlyCards[0].crd_type_id === activeOppCards[0].crd_type_id) {
-                            // Check if both cards have the same value
+                         if (activePlyCards[0].crd_type_id === activeOppCards[0].crd_type_id) {
                             if (activePlyCards[0].crd_value === activeOppCards[0].crd_value) {
-                                console.log("Draw!");
+                                resultString = `Both players played ${activePlyCards[0].ct_name} cards. Draw.`;
                             } else if (activePlyCards[0].crd_value > activeOppCards[0].crd_value) {
-                                console.log(`${game.player.name} wins!`);
+                               resultString = `${game.player.name} won with a ${activePlyCards[0].ct_name} card with value ${activePlyCards[0].crd_value} against ${game.opponents[0].name}'s ${activeOppCards[0].ct_name} card with value ${activeOppCards[0].crd_value}.`;
                                 //await ScoreBoardLine.addScore(game, game.player.id, 1);
                             } else {
-                                console.log(`${game.opponents[0].name} wins!`);
+                                resultString = `${game.opponents[0].name} won with a ${activeOppCards[0].ct_name} card with value ${activeOppCards[0].crd_value} against ${game.player.name}'s ${activePlyCards[0].ct_name} card with value ${activePlyCards[0].crd_value}.`;
                                 //await ScoreBoardLine.addScore(game, game.opponents[0].id, 1);
                             }
                         } else {
-                            // Check which type beats the other
                             if (
                                 (activePlyCards[0].crd_type_id === 1 && activeOppCards[0].crd_type_id === 3) ||
                                 (activePlyCards[0].crd_type_id === 2 && activeOppCards[0].crd_type_id === 1) ||
                                 (activePlyCards[0].crd_type_id === 3 && activeOppCards[0].crd_type_id === 2)
                             ) {
-                                console.log(`${game.player.name} wins!`);
+                                resultString = `${game.player.name} won with a ${activePlyCards[0].ct_name} card against ${game.opponents[0].name}'s ${activeOppCards[0].ct_name} card.`;
                                 //await ScoreBoardLine.addScore(game, game.player.id, 1);
                             } else {
-                                console.log(`${game.opponents[0].name} wins!`);
+                                resultString = `${game.opponents[0].name} won with a ${activeOppCards[0].ct_name} card against ${game.player.name}'s ${activePlyCards[0].ct_name} card.`;
                                 //await ScoreBoardLine.addScore(game, game.opponents[0].id, 1);
                             }
                         }
@@ -118,7 +121,7 @@ class Play {
                     [game.id]);
             }
     
-            return { status: 200, result: { msg: "Your turn ended." } };
+            return { status: 200, result: { msg: resultString } };
         } catch (err) {
             console.log(err);
             return { status: 500, result: err };

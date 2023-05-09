@@ -17,6 +17,7 @@ class GameInfo  {
     static scoreBoard;
     static playerDeck;
     static oppDeck;
+    static resultString = "";
   
     // buttons
     static endturnButton;

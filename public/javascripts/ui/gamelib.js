@@ -7,6 +7,7 @@ async function refresh() {
         if (GameInfo.game.player.state != "Waiting") {
             // The moment we pass from waiting to play
             GameInfo.prepareUI();
+            //console.log('Result string:', GameInfo.resultString);
         }
     } 
     // Nothing to do when we are playing since we control all that happens 
@@ -15,6 +16,7 @@ async function refresh() {
 
 function preload() {
     GameInfo.images.card = loadImage('/assets/card_template.png');
+    GameInfo.resultString = ("Result will be displayed here.");
 }
 
 
@@ -23,6 +25,8 @@ async function setup() {
     canvas.parent('game');
     // preload  images
     
+
+
     await  getGameInfo();
     setInterval(refresh,2000);
 
@@ -52,6 +56,11 @@ function draw() {
         GameInfo.scoreBoard.draw();
         GameInfo.playerDeck.draw();
         GameInfo.oppDeck.draw();
+        // Draw the result string
+        textAlign(CENTER, CENTER);
+        textSize(20);
+        fill('black');
+        text(GameInfo.resultString, GameInfo.width/2, 50);
     }
     
 }
